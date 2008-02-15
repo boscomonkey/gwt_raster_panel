@@ -5,5 +5,8 @@
 
 	<!-- Specify the app entry point class.                   -->
 	<entry-point class='com.boscomonkey.gwtraster.client.GwtRaster'/>
-  
+
+	<!-- Style sheet specific to GwtRaster                    -->
+	<stylesheet src="GwtRaster.css" />
+
 </module>

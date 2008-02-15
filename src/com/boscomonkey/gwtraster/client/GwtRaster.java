@@ -1,9 +1,10 @@
 package com.boscomonkey.gwtraster.client;
 
 import com.google.gwt.core.client.EntryPoint;
-import com.google.gwt.user.client.ui.Button;
-import com.google.gwt.user.client.ui.ClickListener;
-import com.google.gwt.user.client.ui.Label;
+import com.google.gwt.user.client.DOM;
+import com.google.gwt.user.client.ui.FlowPanel;
+import com.google.gwt.user.client.ui.HTML;
+import com.google.gwt.user.client.ui.MouseListenerAdapter;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.Widget;
 
@@ -12,28 +13,54 @@ import com.google.gwt.user.client.ui.Widget;
  */
 public class GwtRaster implements EntryPoint {
 
-  /**
-   * This is the entry point method.
-   */
-  public void onModuleLoad() {
-    final Button button = new Button("Click me");
-    final Label label = new Label();
+    protected class Dot extends HTML {
+        private static final int HEIGHT = 10;
+        private static final int WIDTH = 10;
 
-    button.addClickListener(new ClickListener() {
-      public void onClick(Widget sender) {
-        if (label.getText().equals(""))
-          label.setText("Hello World!");
-        else
-          label.setText("");
-      }
-    });
+        public int x;
+        public int y;
 
-    // Assume that the host HTML has elements defined whose
-    // IDs are "slot1", "slot2".  In a real app, you probably would not want
-    // to hard-code IDs.  Instead, you could, for example, search for all 
-    // elements with a particular CSS class and replace them with widgets.
-    //
-    RootPanel.get("slot1").add(button);
-    RootPanel.get("slot2").add(label);
-  }
+        public Dot(int coordX, int coordY) {
+            this.x = coordX;
+            this.y = coordY;
+            this.addStyleName("cbg-GwtRaster-dot");
+            DOM.setStyleAttribute(getElement(), "left", String.valueOf(x
+                    * WIDTH)
+                    + "px");
+            DOM.setStyleAttribute(getElement(), "top", String.valueOf(y
+                    * HEIGHT)
+                    + "px");
+        }
+    }
+
+    protected MouseListenerAdapter listener = new MouseListenerAdapter() {
+        private static final String CSS_MOUSEOVER = "cbg-GwtRaster-mouseover";
+
+        public void onMouseEnter(Widget sender) {
+            sender.addStyleName(CSS_MOUSEOVER);
+        }
+
+        public void onMouseLeave(Widget sender) {
+            sender.removeStyleName(CSS_MOUSEOVER);
+        }
+    };
+
+    /**
+     * This is the entry point method.
+     */
+    public void onModuleLoad() {
+        FlowPanel panel = new FlowPanel();
+        panel.setStyleName("cbg-GwtRaster");
+
+        for (int x = 0; x < 40; x++) {
+            for (int y = 0; y < 30; y++) {
+                HTML dot = new Dot(x, y);
+                dot.addMouseListener(listener);
+                panel.add(dot);
+            }
+        }
+
+        RootPanel.get("slot1").add(panel);
+    }
+
 }

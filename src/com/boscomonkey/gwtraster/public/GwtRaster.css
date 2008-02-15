@@ -1,0 +1,21 @@
+.cbg-GwtRaster {
+	position: relative;
+	width: 400px;
+	height: 300px;
+
+	border: 1px solid black;
+}
+
+.cbg-GwtRaster-dot {
+	position: absolute;
+	width: 9px;
+	height: 9px;
+
+	background-color: wheat;
+	border-right: 1px solid #ccc;
+	border-bottom: 1px solid #ccc;
+}
+
+.cbg-GwtRaster-mouseover {
+	background-color: red;
+}
