@@ -1,22 +1,25 @@
-.cbg-GwtRaster {
+.cbg-RasterPanel {
 	position: relative;
-	width: 400px;
-	height: 300px;
 
-	border: 1px solid black;
-    cursor: pointer;
+	cursor: pointer;
 }
 
-.cbg-GwtRaster-dot {
+.cbg-RasterPanel-panel {
 	position: absolute;
-	width: 3px;
-	height: 3px;
+	top: 0px;
+	right: 0px;
+	bottom: 0px;
+	left: 0px;
+}
+
+.cbg-RasterPixel {
+	position: absolute;
 
 	background-color: wheat;
 	border-right: 1px solid #ccc;
 	border-bottom: 1px solid #ccc;
 }
 
-.cbg-GwtRaster-mouseover {
+.cbg-RasterPixel-engaged {
 	background-color: red;
 }
