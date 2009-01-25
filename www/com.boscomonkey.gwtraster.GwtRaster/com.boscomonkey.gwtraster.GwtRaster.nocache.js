@@ -199,11 +199,11 @@ function com_boscomonkey_gwtraster_GwtRaster(){
   }
    else {
     try {
-      unflattenKeylistIntoAnswers(['gecko1_8'], '2F6DA4678DBC9784B257479D3D6D1123');
-      unflattenKeylistIntoAnswers(['gecko'], '405C9EA8E6AC74012A3BEF865F2A8394');
-      unflattenKeylistIntoAnswers(['safari'], '5901D7685E396B83EE06DE416F0607B7');
-      unflattenKeylistIntoAnswers(['ie6'], 'B70EF6C9F5ED7E899B597C344BA165D3');
-      unflattenKeylistIntoAnswers(['opera'], 'E4D01CDD5015A1141379F2578B390F40');
+      unflattenKeylistIntoAnswers(['gecko'], '1BF5A6201F3DAD1D4998F69B65742435');
+      unflattenKeylistIntoAnswers(['opera'], '222FA8657473AEDAD2ADFE70DC37E3DC');
+      unflattenKeylistIntoAnswers(['ie6'], '49ADEEFCDFBAF9CF587B7AF7490427EA');
+      unflattenKeylistIntoAnswers(['gecko1_8'], '6C8C09ADE0F48CE8C0D33FF1ED9DA36C');
+      unflattenKeylistIntoAnswers(['safari'], 'F509288AD62704924A140F7FBEAC0588');
       strongName = answers[computePropValue('user.agent')];
     }
      catch (e) {
