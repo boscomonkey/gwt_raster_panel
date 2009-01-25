@@ -1,0 +1,67 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+  <title>GWT Raster</title>
+  <style>
+      body {
+      font-family: Verdana, Helvetica, sans-serif;
+      font-size: smaller;
+      margin: 4em auto;
+      width: 520px;
+      }
+    </style>
+</head>
+<body>
+<h1>GWT Raster</h1>
+<p>This widget is a raster panel for drawing low-res pictures on a web
+page with the
+mouse. Built with GWT, this panel was originally designed to
+demonstrate how a signature widget can be implemented.<br>
+</p>
+<p>Usage is similar to a pencil or brush tool in a paint program. Move
+your mouse over the panel. When the left mouse button is down, the
+"dot" under the mouse cursor will turn on. By dragging the mouse
+without releasing the button, users can draw a trail of dots. When the
+left mouse button is released, no more dots will turn on.<br>
+</p>
+<p></p>
+<p>The "Clear" button will
+turn off all the pixels in the panel.<br>
+</p>
+<p>Try it <a
+ href="www/com.boscomonkey.gwtraster.GwtRaster/GwtRaster.html">out</a>
+now.</p>
+<p></p>
+<h2>API</h2>
+<p>Create a RasterPanel with the width &amp; height of the panel, the
+size of each "dot" (number of screen pixels), and whether you want a
+border. Add it to your DOM somewhere.<br>
+</p>
+<pre style="margin-left: 40px;">// 150x30 panel, each "dot" is 4 screen pixels high &amp; wide, plus border<br>RasterPanel rasterPanel = new RasterPanel(150, 30, 4, true);<br>RootPanel.get("div1").add(rasterPanel);<br></pre>
+<p>Create a button to call RasterPanel#clear() upon mouse click and add
+that to the DOM.<br>
+</p>
+<pre style="margin-left: 40px;">Button btnClear = new Button("Clear");<br>btnClear.addClickListener(new ClickListener() {<br>    public void onClick(Widget sender) {<br>        rasterPanel.clear();<br>    }<br>});<br>RootPanel.get("div2").add(btnClear);<br></pre>
+<p> </p>
+<p>Call RasterPanel#getEngaged() to retrieve all the "dots" that are
+turned on.<br>
+</p>
+<pre style="margin-left: 40px;">HashSet engagedDots = rasterPanel.getEngaged()<br></pre>
+<h2>To Do</h2>
+<ol>
+  <li>Implement RasterPanel#getEngaged() to retrieve all the engaged
+"pixels" upon submission
+(or other events).</li>
+  <li>Add or document ways to use this widget outside GWT with plain
+JavaScript.<br>
+  </li>
+</ol>
+<h2>Developer<br>
+</h2>
+<p>Bosco So &lt;gwt _AT_ boscoso _DOT_ com&gt;; code repository is
+on <a href="http://github.com/boscomonkey/gwt_raster_panel">Github</a>.<br>
+</p>
+<h2>License</h2>
+<p><a href="MIT-LICENSE">MIT</a></p>
+</body>
+</html>
