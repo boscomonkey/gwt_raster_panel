@@ -1,5 +1,8 @@
 package com.boscomonkey.gwtraster.client;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
 
@@ -10,6 +13,13 @@ import com.google.gwt.user.client.ui.FocusPanel;
 import com.google.gwt.user.client.ui.MouseListenerAdapter;
 import com.google.gwt.user.client.ui.Widget;
 
+/**
+ * A RasterPanel allows users to draw on it like a paint program. Mouse down
+ * while moving the mouse will cause the dots under the mouse cursor to light
+ * up. When the mouse button is up, nothing is drawn.
+ * 
+ * @author boscoso
+ */
 public class RasterPanel extends Composite {
     private int nPixelsX;
     private int nPixelsY;
@@ -28,7 +38,7 @@ public class RasterPanel extends Composite {
                 bMouseDown = true;
             }
         }
- 
+
         public void onMouseMove(Widget sender, int x, int y) {
             if (bMouseDown && x >= 0 && y >= 0 && x < width && y < height) {
                 int i = x / pixWidth;
@@ -48,12 +58,32 @@ public class RasterPanel extends Composite {
         }
     };
 
+    /**
+     * Creates a RasterPanel of "numX" by "numY" dots where each dot is
+     * "dimension" screen pixels square. When "border" is true, each dot has a
+     * border.
+     * 
+     * @param numX
+     * @param numY
+     * @param dimension
+     * @param border
+     */
     public RasterPanel(int numX, int numY, int dimension, boolean border) {
         this(numX, numY, dimension, dimension, border);
     }
 
-    public RasterPanel(int numX, int numY, int pixW, int pixY,
-            boolean border) {
+    /**
+     * Creates a RasterPanel of "numX" by "numY" dots where each dot is "pixW"
+     * pixels wide by "pixY" pixels high. When "border" is true, each dot has a
+     * border.
+     * 
+     * @param numX
+     * @param numY
+     * @param pixW
+     * @param pixY
+     * @param border
+     */
+    public RasterPanel(int numX, int numY, int pixW, int pixY, boolean border) {
         nPixelsX = numX;
         nPixelsY = numY;
         pixWidth = pixW;
@@ -80,8 +110,8 @@ public class RasterPanel extends Composite {
             matrix[x] = new RasterPixel[nPixelsY];
 
             for (int y = 0; y < nPixelsY; y++) {
-                RasterPixel dot = new RasterPixel(x, y, pixWidth,
-                        pixHeight, border);
+                RasterPixel dot = new RasterPixel(x, y, pixWidth, pixHeight,
+                        border);
                 panel.add(dot);
 
                 matrix[x][y] = dot;
@@ -89,6 +119,9 @@ public class RasterPanel extends Composite {
         }
     }
 
+    /**
+     * Clears all lit dots from this RasterPanel.
+     */
     public void clear() {
         for (Iterator iter = engagedPixels.iterator(); iter.hasNext();) {
             Widget w = (Widget) iter.next();
@@ -96,5 +129,14 @@ public class RasterPanel extends Composite {
         }
         engagedPixels.clear();
     }
-}
 
+    /**
+     * @return collection of XyCoord's that are lit
+     */
+    public Collection getCoords() {
+        ArrayList lst = new ArrayList();
+        for (Iterator iter = engagedPixels.iterator(); iter.hasNext();)
+            lst.add(iter.next());
+        return lst;
+    }
+}
