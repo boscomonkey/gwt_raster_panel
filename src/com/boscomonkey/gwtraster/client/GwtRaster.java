@@ -5,6 +5,7 @@ import java.util.Iterator;
 
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.RootPanel;
@@ -38,8 +39,10 @@ public class GwtRaster implements EntryPoint {
                 Collection coords = rasterPanel.getCoords();
                 for (Iterator iter = coords.iterator(); iter.hasNext(); /**/) {
                     XyCoord coord = (XyCoord) iter.next();
-                    GWT.log(Integer.toString(coord.getX()) + ","
-                            + Integer.toString(coord.getY()), null);
+                    if (GWT.isScript())
+                        Window.alert(coord.toString());
+                    else
+                        GWT.log(coord.toString(), null);
                 }
             }
         });

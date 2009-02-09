@@ -2,9 +2,6 @@ package com.boscomonkey.gwtraster.client;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Iterator;
 
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.ui.Composite;
@@ -25,11 +22,12 @@ public class RasterPanel extends Composite {
     private int nPixelsY;
     private int pixWidth;
     private int pixHeight;
+    private boolean borderedDots;
     private int width;
     private int height;
+    private FlowPanel dotsPanel;
 
-    private RasterPixel matrix[][];
-    private HashSet engagedPixels = new HashSet();
+    private boolean xyFlags[][];
     private boolean bMouseDown = false;
     private MouseListenerAdapter mouseListener = new MouseListenerAdapter() {
         public void onMouseDown(Widget sender, int x, int y) {
@@ -43,10 +41,15 @@ public class RasterPanel extends Composite {
             if (bMouseDown && x >= 0 && y >= 0 && x < width && y < height) {
                 int i = x / pixWidth;
                 int j = y / pixHeight;
-                RasterPixel dot = matrix[i][j];
 
-                dot.addStyleName(RasterPixel.CSS_ENGAGED);
-                engagedPixels.add(dot);
+                if (! xyFlags[i][j]) {
+                    RasterPixel dot = new RasterPixel(i, j, pixWidth,
+                            pixHeight, borderedDots);
+                    xyFlags[i][j] = true;
+
+                    dotsPanel.add(dot);
+                    dot.addStyleName(RasterPixel.CSS_ENGAGED);
+                }
             }
         }
 
@@ -88,6 +91,7 @@ public class RasterPanel extends Composite {
         nPixelsY = numY;
         pixWidth = pixW;
         pixHeight = pixY;
+        borderedDots = border;
 
         // this panel captures mouse moves
         FocusPanel focus = new FocusPanel();
@@ -100,34 +104,27 @@ public class RasterPanel extends Composite {
         height = nPixelsY * pixHeight;
         focus.setPixelSize(width, height);
 
-        // this panel contains all the pixels
-        FlowPanel panel = new FlowPanel();
-        focus.setWidget(panel);
-        panel.addStyleName("cbg-RasterPanel-panel");
+        dotsPanel = new FlowPanel();
+        focus.setWidget(dotsPanel);
+        dotsPanel.addStyleName("cbg-RasterPanel-panel");
 
-        matrix = new RasterPixel[nPixelsX][];
-        for (int x = 0; x < nPixelsX; x++) {
-            matrix[x] = new RasterPixel[nPixelsY];
-
-            for (int y = 0; y < nPixelsY; y++) {
-                RasterPixel dot = new RasterPixel(x, y, pixWidth, pixHeight,
-                        border);
-                panel.add(dot);
-
-                matrix[x][y] = dot;
-            }
-        }
+        xyFlags = new boolean[nPixelsX][];
+        for (int x = 0; x < nPixelsX; x++)
+            xyFlags[x] = new boolean[nPixelsY];
     }
 
     /**
      * Clears all lit dots from this RasterPanel.
      */
     public void clear() {
-        for (Iterator iter = engagedPixels.iterator(); iter.hasNext();) {
-            Widget w = (Widget) iter.next();
-            w.removeStyleName(RasterPixel.CSS_ENGAGED);
+        for (int i = 0, n = dotsPanel.getWidgetCount(); i < n; i++) {
+            RasterPixel pix = (RasterPixel)dotsPanel.getWidget(i);
+            pix.removeStyleName(RasterPixel.CSS_ENGAGED);
+
+            XyCoord xy = pix.getCoord();
+            xyFlags[xy.getX()][xy.getY()] = false;
         }
-        engagedPixels.clear();
+        dotsPanel.clear();
     }
 
     /**
@@ -135,8 +132,11 @@ public class RasterPanel extends Composite {
      */
     public Collection getCoords() {
         ArrayList lst = new ArrayList();
-        for (Iterator iter = engagedPixels.iterator(); iter.hasNext();)
-            lst.add(iter.next());
+        for (int i = 0, n = dotsPanel.getWidgetCount(); i < n; i++) {
+            Widget w = dotsPanel.getWidget(i);
+            RasterPixel p = (RasterPixel)w;
+            lst.add(p.getCoord());
+        }
         return lst;
     }
 }

@@ -1,14 +1,18 @@
 function com_boscomonkey_gwtraster_GwtRaster(){
-  var $wnd = window, $doc = document, external = $wnd.external, scriptsDone, loadDone, bodyDone, base = '', metaProps = {}, values = [], providers = [], answers = [], onLoadErrorFunc, propertyErrorFunc;
-  if (!$wnd.__gwt_stylesLoaded) {
-    $wnd.__gwt_stylesLoaded = {};
+  var $wnd_0 = window, $doc_0 = document, $stats = $wnd_0.__gwtStatsEvent?function(a){
+    return $wnd_0.__gwtStatsEvent(a);
   }
-  if (!$wnd.__gwt_scriptsLoaded) {
-    $wnd.__gwt_scriptsLoaded = {};
+  :null, scriptsDone, loadDone, bodyDone, base = '', metaProps = {}, values = [], providers = [], answers = [], onLoadErrorFunc, propertyErrorFunc;
+  $stats && $stats({moduleName:'com.boscomonkey.gwtraster.GwtRaster', subSystem:'startup', evtGroup:'bootstrap', millis:(new Date()).getTime(), type:'begin'});
+  if (!$wnd_0.__gwt_stylesLoaded) {
+    $wnd_0.__gwt_stylesLoaded = {};
+  }
+  if (!$wnd_0.__gwt_scriptsLoaded) {
+    $wnd_0.__gwt_scriptsLoaded = {};
   }
   function isHostedMode(){
     try {
-      return external && (external.gwtOnLoad && $wnd.location.search.indexOf('gwt.hybrid') == -1);
+      return $wnd_0.external && ($wnd_0.external.gwtOnLoad && $wnd_0.location.search.indexOf('gwt.hybrid') == -1);
     }
      catch (e) {
       return false;
@@ -16,8 +20,8 @@ function com_boscomonkey_gwtraster_GwtRaster(){
   }
 
   function maybeStartModule(){
-    if (scriptsDone && (loadDone && bodyDone)) {
-      var iframe = $doc.getElementById('com.boscomonkey.gwtraster.GwtRaster');
+    if (scriptsDone && loadDone) {
+      var iframe = $doc_0.getElementById('com.boscomonkey.gwtraster.GwtRaster');
       var frameWnd = iframe.contentWindow;
       frameWnd.__gwt_initHandlers = com_boscomonkey_gwtraster_GwtRaster.__gwt_initHandlers;
       if (isHostedMode()) {
@@ -28,20 +32,29 @@ function com_boscomonkey_gwtraster_GwtRaster(){
       }
       com_boscomonkey_gwtraster_GwtRaster = null;
       frameWnd.gwtOnLoad(onLoadErrorFunc, 'com.boscomonkey.gwtraster.GwtRaster', base);
+      $stats && $stats({moduleName:'com.boscomonkey.gwtraster.GwtRaster', subSystem:'startup', evtGroup:'moduleStartup', millis:(new Date()).getTime(), type:'end'});
     }
   }
 
   function computeScriptBase(){
     var thisScript, markerId = '__gwt_marker_com.boscomonkey.gwtraster.GwtRaster', markerScript;
-    $doc.write('<script id="' + markerId + '"><\/script>');
-    markerScript = $doc.getElementById(markerId);
+    $doc_0.write('<script id="' + markerId + '"><\/script>');
+    markerScript = $doc_0.getElementById(markerId);
     thisScript = markerScript && markerScript.previousSibling;
     while (thisScript && thisScript.tagName != 'SCRIPT') {
       thisScript = thisScript.previousSibling;
     }
     function getDirectoryOfFile(path){
-      var eq = path.lastIndexOf('/');
-      return eq >= 0?path.substring(0, eq + 1):'';
+      var hashIndex = path.lastIndexOf('#');
+      if (hashIndex == -1) {
+        hashIndex = path.length;
+      }
+      var queryIndex = path.indexOf('?');
+      if (queryIndex == -1) {
+        queryIndex = path.length;
+      }
+      var slashIndex = path.lastIndexOf('/', Math.min(queryIndex, hashIndex));
+      return slashIndex >= 0?path.substring(0, slashIndex + 1):'';
     }
 
     ;
@@ -49,20 +62,18 @@ function com_boscomonkey_gwtraster_GwtRaster(){
       base = getDirectoryOfFile(thisScript.src);
     }
     if (base == '') {
-      var baseElements = $doc.getElementsByTagName('base');
+      var baseElements = $doc_0.getElementsByTagName('base');
       if (baseElements.length > 0) {
         base = baseElements[baseElements.length - 1].href;
       }
        else {
-        var loc = $doc.location;
-        var href = loc.href;
-        base = getDirectoryOfFile(href.substr(0, href.length - loc.hash.length));
+        base = getDirectoryOfFile($doc_0.location.href);
       }
     }
      else if (base.match(/^\w+:\/\//)) {
     }
      else {
-      var img = $doc.createElement('img');
+      var img = $doc_0.createElement('img');
       img.src = base + 'clear.cache.gif';
       base = getDirectoryOfFile(img.src);
     }
@@ -117,15 +128,6 @@ function com_boscomonkey_gwtraster_GwtRaster(){
     }
   }
 
-  function __gwt_isKnownPropertyValue(propName, propValue){
-    return propValue in values[propName];
-  }
-
-  function __gwt_getMetaProperty(name){
-    var value = metaProps[name];
-    return value == null?null:value;
-  }
-
   function unflattenKeylistIntoAnswers(propValArray, value){
     var answer = answers;
     for (var i = 0, n = propValArray.length - 1; i < n; ++i) {
@@ -149,6 +151,21 @@ function com_boscomonkey_gwtraster_GwtRaster(){
     throw null;
   }
 
+  var frameInjected;
+  function maybeInjectFrame(){
+    if (!frameInjected) {
+      frameInjected = true;
+      var iframe = $doc_0.createElement('iframe');
+      iframe.src = "javascript:''";
+      iframe.id = 'com.boscomonkey.gwtraster.GwtRaster';
+      iframe.style.cssText = 'position:absolute;width:0;height:0;border:none';
+      iframe.tabIndex = -1;
+      $doc_0.body.appendChild(iframe);
+      $stats && $stats({moduleName:'com.boscomonkey.gwtraster.GwtRaster', subSystem:'startup', evtGroup:'moduleStartup', millis:(new Date()).getTime(), type:'moduleRequested'});
+      iframe.contentWindow.location.replace(base + strongName);
+    }
+  }
+
   providers['user.agent'] = function(){
     var ua = navigator.userAgent.toLowerCase();
     var makeVersion = function(result){
@@ -162,17 +179,17 @@ function com_boscomonkey_gwtraster_GwtRaster(){
       return 'safari';
     }
      else if (ua.indexOf('msie') != -1) {
-      var result = /msie ([0-9]+)\.([0-9]+)/.exec(ua);
-      if (result && result.length == 3) {
-        if (makeVersion(result) >= 6000) {
+      var result_0 = /msie ([0-9]+)\.([0-9]+)/.exec(ua);
+      if (result_0 && result_0.length == 3) {
+        if (makeVersion(result_0) >= 6000) {
           return 'ie6';
         }
       }
     }
      else if (ua.indexOf('gecko') != -1) {
-      var result = /rv:([0-9]+)\.([0-9]+)/.exec(ua);
-      if (result && result.length == 3) {
-        if (makeVersion(result) >= 1008)
+      var result_0 = /rv:([0-9]+)\.([0-9]+)/.exec(ua);
+      if (result_0 && result_0.length == 3) {
+        if (makeVersion(result_0) >= 1008)
           return 'gecko1_8';
       }
       return 'gecko';
@@ -180,44 +197,54 @@ function com_boscomonkey_gwtraster_GwtRaster(){
     return 'unknown';
   }
   ;
-  values['user.agent'] = {'gecko':0, 'gecko1_8':1, 'ie6':2, 'opera':3, 'safari':4};
-  com_boscomonkey_gwtraster_GwtRaster.onInjectionDone = function(){
-    scriptsDone = true;
-    maybeStartModule();
+  values['user.agent'] = {gecko:0, gecko1_8:1, ie6:2, opera:3, safari:4};
+  com_boscomonkey_gwtraster_GwtRaster.onScriptLoad = function(){
+    if (frameInjected) {
+      loadDone = true;
+      maybeStartModule();
+    }
   }
   ;
-  com_boscomonkey_gwtraster_GwtRaster.onScriptLoad = function(){
-    loadDone = true;
+  com_boscomonkey_gwtraster_GwtRaster.onInjectionDone = function(){
+    scriptsDone = true;
+    $stats && $stats({moduleName:'com.boscomonkey.gwtraster.GwtRaster', subSystem:'startup', evtGroup:'loadExternalRefs', millis:(new Date()).getTime(), type:'end'});
     maybeStartModule();
   }
   ;
   computeScriptBase();
   processMetas();
+  $stats && $stats({moduleName:'com.boscomonkey.gwtraster.GwtRaster', subSystem:'startup', evtGroup:'bootstrap', millis:(new Date()).getTime(), type:'selectingPermutation'});
   var strongName;
   if (isHostedMode()) {
     strongName = 'hosted.html?com_boscomonkey_gwtraster_GwtRaster';
   }
    else {
     try {
-      unflattenKeylistIntoAnswers(['gecko'], '1BF5A6201F3DAD1D4998F69B65742435');
-      unflattenKeylistIntoAnswers(['opera'], '222FA8657473AEDAD2ADFE70DC37E3DC');
-      unflattenKeylistIntoAnswers(['ie6'], '49ADEEFCDFBAF9CF587B7AF7490427EA');
-      unflattenKeylistIntoAnswers(['gecko1_8'], '6C8C09ADE0F48CE8C0D33FF1ED9DA36C');
-      unflattenKeylistIntoAnswers(['safari'], 'F509288AD62704924A140F7FBEAC0588');
+      unflattenKeylistIntoAnswers(['gecko1_8'], '832336F56100AC28DC437ED2DCC0D1AD.cache.html');
+      unflattenKeylistIntoAnswers(['opera'], '157EFFA6A7316416A89F3A3DF680D090.cache.html');
+      unflattenKeylistIntoAnswers(['ie6'], 'FCB5FBF553DA6D231C8F4C8DFEAA9B31.cache.html');
+      unflattenKeylistIntoAnswers(['safari'], 'EE272E682D1761DD5E065F8A72CF1E7D.cache.html');
+      unflattenKeylistIntoAnswers(['gecko'], 'AE8698EE3309BA1D2348308C5CAA85EE.cache.html');
       strongName = answers[computePropValue('user.agent')];
     }
      catch (e) {
       return;
     }
-    strongName += '.cache.html';
   }
   var onBodyDoneTimerId;
   function onBodyDone(){
     if (!bodyDone) {
       bodyDone = true;
+      if (!__gwt_stylesLoaded['GwtRaster.css']) {
+        var l = $doc_0.createElement('link');
+        __gwt_stylesLoaded['GwtRaster.css'] = l;
+        l.setAttribute('rel', 'stylesheet');
+        l.setAttribute('href', base + 'GwtRaster.css');
+        $doc_0.getElementsByTagName('head')[0].appendChild(l);
+      }
       maybeStartModule();
-      if ($doc.removeEventListener) {
-        $doc.removeEventListener('DOMContentLoaded', onBodyDone, false);
+      if ($doc_0.removeEventListener) {
+        $doc_0.removeEventListener('DOMContentLoaded', onBodyDone, false);
       }
       if (onBodyDoneTimerId) {
         clearInterval(onBodyDoneTimerId);
@@ -225,43 +252,28 @@ function com_boscomonkey_gwtraster_GwtRaster(){
     }
   }
 
-  var scriptInjected;
-  function maybeInjectFrame(){
-    if (!scriptInjected && $doc.body) {
-      scriptInjected = true;
-      var iframe = $doc.createElement('iframe');
-      iframe.src = "javascript:''";
-      iframe.id = 'com.boscomonkey.gwtraster.GwtRaster';
-      iframe.style.cssText = 'position:absolute;width:0;height:0;border:none';
-      $doc.body.appendChild(iframe);
-      iframe.src = base + strongName;
-    }
-  }
-
-  if ($doc.addEventListener) {
-    $doc.addEventListener('DOMContentLoaded', function(){
+  if ($doc_0.addEventListener) {
+    $doc_0.addEventListener('DOMContentLoaded', function(){
       maybeInjectFrame();
       onBodyDone();
     }
     , false);
   }
   var onBodyDoneTimerId = setInterval(function(){
-    maybeInjectFrame();
-    if (/loaded|complete/.test($doc.readyState)) {
+    if (/loaded|complete/.test($doc_0.readyState)) {
+      maybeInjectFrame();
       onBodyDone();
     }
   }
   , 50);
-  if (!__gwt_stylesLoaded['GwtRaster.css']) {
-    __gwt_stylesLoaded['GwtRaster.css'] = true;
-    document.write('<link rel="stylesheet" href="' + base + 'GwtRaster.css">');
-  }
-  $doc.write("<script>com_boscomonkey_gwtraster_GwtRaster.onInjectionDone('com.boscomonkey.gwtraster.GwtRaster')<\/script>");
+  $stats && $stats({moduleName:'com.boscomonkey.gwtraster.GwtRaster', subSystem:'startup', evtGroup:'bootstrap', millis:(new Date()).getTime(), type:'end'});
+  $stats && $stats({moduleName:'com.boscomonkey.gwtraster.GwtRaster', subSystem:'startup', evtGroup:'loadExternalRefs', millis:(new Date()).getTime(), type:'begin'});
+  $doc_0.write('<script defer="defer">com_boscomonkey_gwtraster_GwtRaster.onInjectionDone(\'com.boscomonkey.gwtraster.GwtRaster\')<\/script>');
 }
 
 com_boscomonkey_gwtraster_GwtRaster.__gwt_initHandlers = function(resize, beforeunload, unload){
-  var $wnd = window, oldOnResize = $wnd.onresize, oldOnBeforeUnload = $wnd.onbeforeunload, oldOnUnload = $wnd.onunload;
-  $wnd.onresize = function(evt){
+  var $wnd_0 = window, oldOnResize = $wnd_0.onresize, oldOnBeforeUnload = $wnd_0.onbeforeunload, oldOnUnload = $wnd_0.onunload;
+  $wnd_0.onresize = function(evt){
     try {
       resize();
     }
@@ -270,7 +282,7 @@ com_boscomonkey_gwtraster_GwtRaster.__gwt_initHandlers = function(resize, before
     }
   }
   ;
-  $wnd.onbeforeunload = function(evt){
+  $wnd_0.onbeforeunload = function(evt){
     var ret, oldRet;
     try {
       ret = beforeunload();
@@ -286,12 +298,15 @@ com_boscomonkey_gwtraster_GwtRaster.__gwt_initHandlers = function(resize, before
     }
   }
   ;
-  $wnd.onunload = function(evt){
+  $wnd_0.onunload = function(evt){
     try {
       unload();
     }
      finally {
       oldOnUnload && oldOnUnload(evt);
+      $wnd_0.onresize = null;
+      $wnd_0.onbeforeunload = null;
+      $wnd_0.onunload = null;
     }
   }
   ;
