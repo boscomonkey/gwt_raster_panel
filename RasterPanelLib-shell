@@ -1,0 +1,3 @@
+#!/bin/sh
+APPDIR=`dirname $0`;
+java -XstartOnFirstThread -Xmx256M -cp "$APPDIR/src:$APPDIR/bin:/Users/boscoso/Public/gwt/gwt-mac-1.5.3/gwt-user.jar:/Users/boscoso/Public/gwt/gwt-mac-1.5.3/gwt-dev-mac.jar" com.google.gwt.dev.GWTShell -out "$APPDIR/www" "$@" com.boscomonkey.gwtraster.RasterPanelLib/RasterPanelLib.html;
