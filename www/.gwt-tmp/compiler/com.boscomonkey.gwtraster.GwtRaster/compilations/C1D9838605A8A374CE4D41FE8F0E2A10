@@ -1,14 +1,3 @@
-<html>
-<head><script>
-var $gwt_version = "1.5.3";
-var $wnd = parent;
-var $doc = $wnd.document;
-var $moduleName, $moduleBase;
-var $stats = $wnd.__gwtStatsEvent ? function(a) {return $wnd.__gwtStatsEvent(a);} : null;
-$stats && $stats({moduleName:'com.boscomonkey.gwtraster.GwtRaster',subSystem:'startup',evtGroup:'moduleStartup',millis:(new Date()).getTime(),type:'moduleEvalStart'});
-</script></head>
-<body>
-<script><!--
 var _;
 function equals_0(other){
   return (this == null?null:this) === (other == null?null:other);
@@ -48,12 +37,19 @@ function $GwtRaster$2(this$static, val$rasterPanel){
 }
 
 function onClick_0(sender){
-  var coord, coords, iter;
+  var buf, coord, coords, firstElt, iter;
   coords = $getCoords(this.val$rasterPanel);
+  buf = $StringBuilder(new StringBuilder());
+  firstElt = true;
   for (iter = $AbstractList$IteratorImpl(new AbstractList$IteratorImpl(), coords); iter.i < iter.this$0.size_0();) {
+    if (firstElt)
+      firstElt = false;
+    else 
+      $append(buf, ', ');
     coord = dynamicCast($next_0(iter), 2);
-    $wnd.alert('(' + coord.x + ', ' + coord.y + ')');
+    $append(buf, '(' + coord.x + ', ' + coord.y + ')');
   }
+  $wnd.alert($toString(buf));
 }
 
 function GwtRaster$2(){
@@ -281,9 +277,9 @@ function $RasterPanel(this$static, numX, numY, pixW, pixY, border){
   $initWidget(this$static, focus);
   setStyleName(focus.element, 'cbg-RasterPanel', true);
   $addMouseListener(focus, this$static.mouseListener);
-  this$static.width_0 = this$static.nPixelsX * this$static.pixWidth;
-  this$static.height_0 = this$static.nPixelsY * this$static.pixHeight;
-  $setPixelSize(focus, this$static.width_0, this$static.height_0);
+  this$static.width = this$static.nPixelsX * this$static.pixWidth;
+  this$static.height = this$static.nPixelsY * this$static.pixHeight;
+  $setPixelSize(focus, this$static.width, this$static.height);
   this$static.dotsPanel = $FlowPanel(new FlowPanel());
   $setWidget(focus, this$static.dotsPanel);
   setStyleName(this$static.dotsPanel.element, 'cbg-RasterPanel-panel', true);
@@ -323,12 +319,12 @@ _.typeId$ = 8;
 _.bMouseDown = false;
 _.borderedDots = false;
 _.dotsPanel = null;
-_.height_0 = 0;
+_.height = 0;
 _.nPixelsX = 0;
 _.nPixelsY = 0;
 _.pixHeight = 0;
 _.pixWidth = 0;
-_.width_0 = 0;
+_.width = 0;
 _.xyFlags = null;
 function onMouseDown_0(sender, x, y){
 }
@@ -369,7 +365,7 @@ function onMouseDown(sender, x, y){
 
 function onMouseMove(sender, x, y){
   var dot, i, j;
-  if (this.this$0.bMouseDown && x >= 0 && y >= 0 && x < this.this$0.width_0 && y < this.this$0.height_0) {
+  if (this.this$0.bMouseDown && x >= 0 && y >= 0 && x < this.this$0.width && y < this.this$0.height) {
     i = ~~(x / this.this$0.pixWidth);
     j = ~~(y / this.this$0.pixHeight);
     if (!this.this$0.xyFlags[i][j]) {
@@ -400,16 +396,16 @@ _.this$0 = null;
 function $RasterPixel(this$static, x, y, w, h, border){
   var dot, pixelX, pixelY;
   this$static.coord = $XyCoord(new XyCoord(), x, y);
-  this$static.width_0 = w;
-  this$static.height_0 = h;
+  this$static.width = w;
+  this$static.height = h;
   dot = $SimplePanel(new SimplePanel());
   $initWidget(this$static, dot);
   setStyleName(dot.element, 'cbg-RasterPixel', true);
-  pixelX = '' + this$static.coord.x * this$static.width_0 + 'px';
-  pixelY = '' + this$static.coord.y * this$static.height_0 + 'px';
+  pixelX = '' + this$static.coord.x * this$static.width + 'px';
+  pixelY = '' + this$static.coord.y * this$static.height + 'px';
   this$static.element.style['left'] = pixelX;
   this$static.element.style['top'] = pixelY;
-  $setPixelSize(this$static, border?this$static.width_0 - 1:this$static.width_0, border?this$static.height_0 - 1:this$static.height_0);
+  $setPixelSize(this$static, border?this$static.width - 1:this$static.width, border?this$static.height - 1:this$static.height);
   return this$static;
 }
 
@@ -419,8 +415,8 @@ function RasterPixel(){
 _ = RasterPixel.prototype = new Composite();
 _.typeId$ = 11;
 _.coord = null;
-_.height_0 = 0;
-_.width_0 = 0;
+_.height = 0;
+_.width = 0;
 function $XyCoord(this$static, x, y){
   this$static.x = x;
   this$static.y = y;
@@ -454,68 +450,21 @@ function $getParentElement(elem){
 }
 
 function $getAbsoluteLeft(elem){
-  if (elem.offsetLeft == null) {
-    return 0;
+  if (Element.prototype.getBoundingClientRect) {
+    return elem.getBoundingClientRect().left + ($clinit_29() , documentRoot).scrollLeft | 0;
   }
-  var left = 0;
-  var curr = elem.parentNode;
-  if (curr) {
-    while (curr.offsetParent) {
-      left -= curr.scrollLeft;
-      curr = curr.parentNode;
-    }
+   else {
+    return $doc.getBoxObjectFor(elem).screenX - $doc.getBoxObjectFor($doc.documentElement).screenX;
   }
-  while (elem) {
-    left += elem.offsetLeft;
-    var parent = elem.offsetParent;
-    if (parent && $wnd.devicePixelRatio) {
-      left += parseInt($doc.defaultView.getComputedStyle(parent, '').getPropertyValue('border-left-width'));
-    }
-    if (parent && (parent.tagName == 'BODY' && elem.style.position == 'absolute')) {
-      break;
-    }
-    elem = parent;
-  }
-  return left;
 }
 
 function $getAbsoluteTop(elem){
-  if (elem.offsetTop == null) {
-    return 0;
+  if (Element.prototype.getBoundingClientRect) {
+    return elem.getBoundingClientRect().top + ($clinit_29() , documentRoot).scrollTop | 0;
   }
-  var top = 0;
-  var curr = elem.parentNode;
-  if (curr) {
-    while (curr.offsetParent) {
-      top -= curr.scrollTop;
-      curr = curr.parentNode;
-    }
+   else {
+    return $doc.getBoxObjectFor(elem).screenY - $doc.getBoxObjectFor($doc.documentElement).screenY;
   }
-  while (elem) {
-    top += elem.offsetTop;
-    var parent = elem.offsetParent;
-    if (parent && $wnd.devicePixelRatio) {
-      top += parseInt($doc.defaultView.getComputedStyle(parent, '').getPropertyValue('border-top-width'));
-    }
-    if (parent && (parent.tagName == 'BODY' && elem.style.position == 'absolute')) {
-      break;
-    }
-    elem = parent;
-  }
-  return top;
-}
-
-function $isOrHasChild(parent, child){
-  while (child) {
-    if (parent == child) {
-      return true;
-    }
-    child = child.parentNode;
-    if (child && child.nodeType != 1) {
-      child = null;
-    }
-  }
-  return false;
 }
 
 function createFromSeed(seedType, length){
@@ -629,6 +578,7 @@ function setCapture(elem){
 function sinkEvents(elem, eventBits){
   $maybeInitializeEventSystem();
   $sinkEventsImpl(elem, eventBits);
+  $sinkEventsMozilla(elem, eventBits);
 }
 
 var currentEvent = null, sCaptureElem = null;
@@ -730,6 +680,7 @@ function $eventGetTypeInt(evt){
 function $maybeInitializeEventSystem(){
   if (!eventSystemIsInitialized) {
     $initEventSystem();
+    $initSyntheticMouseUpEvents();
     eventSystemIsInitialized = true;
   }
 }
@@ -852,26 +803,42 @@ function $sinkEventsImpl(elem, bits){
 }
 
 var captureElem = null, dispatchCapturedEvent = null, dispatchCapturedMouseEvent = null, dispatchEvent_0 = null;
-function $eventGetClientX(evt){
-  if ($wnd.devicePixelRatio) {
-    return evt.clientX || 0;
+function $initSyntheticMouseUpEvents(){
+  $wnd.addEventListener('mouseout', function(evt){
+    var cap = $wnd.__captureElem;
+    if (cap && !evt.relatedTarget) {
+      if ('html' == evt.target.tagName.toLowerCase()) {
+        var muEvent = $doc.createEvent('MouseEvents');
+        muEvent.initMouseEvent('mouseup', true, true, $wnd, 0, evt.screenX, evt.screenY, evt.clientX, evt.clientY, evt.ctrlKey, evt.altKey, evt.shiftKey, evt.metaKey, evt.button, null);
+        cap.dispatchEvent(muEvent);
+      }
+    }
   }
-   else {
-    var style = document.defaultView.getComputedStyle($doc.getElementsByTagName('html')[0], '');
-    return evt.pageX - $doc.body.scrollLeft - parseInt(style.getPropertyValue('margin-left')) - parseInt(style.getPropertyValue('border-left-width')) || 0;
+  , true);
+  $wnd.addEventListener('DOMMouseScroll', dispatchCapturedMouseEvent, true);
+}
+
+function $sinkEventsMozilla(elem, bits){
+  if (bits & 131072) {
+    elem.addEventListener('DOMMouseScroll', dispatchEvent_0, false);
   }
 }
 
-function $eventGetClientY(evt){
-  if ($wnd.devicePixelRatio) {
-    return evt.clientY || 0;
-  }
-   else {
-    var style = document.defaultView.getComputedStyle($doc.getElementsByTagName('html')[0], '');
-    return evt.pageY - $doc.body.scrollTop - parseInt(style.getPropertyValue('margin-top')) - parseInt(style.getPropertyValue('border-top-width')) || 0;
-  }
+function $clinit_29(){
+  $clinit_29 = nullMethod;
+  documentRoot = $getDocumentRoot(($clinit_29() , new DocumentRootImpl()));
 }
 
+function $getDocumentRoot(){
+  return $doc.compatMode == 'CSS1Compat'?$doc.documentElement:$doc.body;
+}
+
+function DocumentRootImpl(){
+}
+
+_ = DocumentRootImpl.prototype = new Object_0();
+_.typeId$ = 0;
+var documentRoot;
 function $clear_0(this$static){
   var it;
   it = $WidgetCollection$WidgetIterator(new WidgetCollection$WidgetIterator(), this$static.children);
@@ -971,11 +938,6 @@ function AbsolutePanel(){
 _ = AbsolutePanel.prototype = new ComplexPanel();
 _.remove = remove;
 _.typeId$ = 19;
-function $clinit_41(){
-  $clinit_41 = nullMethod;
-  impl_0 = ($clinit_67() , implWidget);
-}
-
 function $addClickListener(this$static, listener){
   if (!this$static.clickListeners) {
     this$static.clickListeners = $ClickListenerCollection(new ClickListenerCollection());
@@ -999,16 +961,9 @@ _ = FocusWidget.prototype = new Widget();
 _.onBrowserEvent = onBrowserEvent_1;
 _.typeId$ = 20;
 _.clickListeners = null;
-var impl_0;
-function $clinit_33(){
-  $clinit_33 = nullMethod;
-  $clinit_41();
-}
-
 function $ButtonBase(this$static, elem){
-  $clinit_33();
   this$static.element = elem;
-  impl_0.setTabIndex(this$static.element, 0);
+  this$static.element.tabIndex = 0;
   return this$static;
 }
 
@@ -1017,13 +972,7 @@ function ButtonBase(){
 
 _ = ButtonBase.prototype = new FocusWidget();
 _.typeId$ = 21;
-function $clinit_34(){
-  $clinit_34 = nullMethod;
-  $clinit_33();
-}
-
 function $Button_0(this$static, html){
-  $clinit_34();
   $ButtonBase(this$static, $doc.createElement('button'));
   adjustType(this$static.element);
   this$static.element['className'] = 'gwt-Button';
@@ -1281,14 +1230,9 @@ _.iterator = iterator_0;
 _.remove = remove_1;
 _.typeId$ = 27;
 _.widget = null;
-function $clinit_40(){
-  $clinit_40 = nullMethod;
-  impl = ($clinit_67() , implPanel);
-}
-
 function $FocusPanel(this$static){
-  $clinit_40();
-  this$static.element = $createFocusable(impl);
+  var e;
+  this$static.element = (e = $doc.createElement('DIV') , e.tabIndex = 0 , e);
   sinkEvents(this$static.element, 138237 | (this$static.element.__eventBits || 0));
   return this$static;
 }
@@ -1321,7 +1265,6 @@ _ = FocusPanel.prototype = new SimplePanel();
 _.onBrowserEvent = onBrowserEvent_0;
 _.typeId$ = 28;
 _.mouseListeners = null;
-var impl;
 function $MouseListenerCollection(this$static){
   this$static.array = initDim(_3Ljava_lang_Object_2_classLit, 0, 0, 0, 0);
   this$static.size = 0;
@@ -1347,8 +1290,8 @@ function $fireMouseEnter(this$static, sender){
 function $fireMouseEvent(this$static, sender, event_0){
   var from, senderElem, to, x, y;
   senderElem = sender.element;
-  x = $eventGetClientX(event_0) - $getAbsoluteLeft(senderElem) + (parseInt(senderElem['scrollLeft']) || 0) + $doc.body.scrollLeft;
-  y = $eventGetClientY(event_0) - $getAbsoluteTop(senderElem) + (parseInt(senderElem['scrollTop']) || 0) + $doc.body.scrollTop;
+  x = (event_0.clientX || 0) - $getAbsoluteLeft(senderElem) + (parseInt(senderElem['scrollLeft']) || 0) + ($clinit_29() , documentRoot).scrollLeft;
+  y = (event_0.clientY || 0) - $getAbsoluteTop(senderElem) + (parseInt(senderElem['scrollTop']) || 0) + documentRoot.scrollTop;
   switch ($eventGetTypeInt(event_0)) {
     case 4:
       $fireMouseDown(this$static, sender, x, y);
@@ -1361,14 +1304,14 @@ function $fireMouseEvent(this$static, sender, event_0){
       break;
     case 16:
       from = $eventGetFromElement(event_0);
-      if (!from || !$isOrHasChild(senderElem, from)) {
+      if (!from || !(senderElem === from || !!(senderElem.compareDocumentPosition(from) & 16))) {
         $fireMouseEnter(this$static, sender);
       }
 
       break;
     case 32:
       to = $eventGetToElement(event_0);
-      if (!to || !$isOrHasChild(senderElem, to)) {
+      if (!to || !(senderElem === to || !!(senderElem.compareDocumentPosition(to) & 16))) {
         $fireMouseLeave(this$static, sender);
       }
 
@@ -1621,118 +1564,6 @@ _.next = next_1;
 _.typeId$ = 0;
 _.index = -1;
 _.this$0 = null;
-function $clinit_67(){
-  $clinit_67 = nullMethod;
-  implPanel = $FocusImplSafari(new FocusImplSafari());
-  implWidget = implPanel?($clinit_67() , new FocusImpl()):implPanel;
-}
-
-function setTabIndex_0(elem, index){
-  elem.tabIndex = index;
-}
-
-function FocusImpl(){
-}
-
-_ = FocusImpl.prototype = new Object_0();
-_.setTabIndex = setTabIndex_0;
-_.typeId$ = 0;
-var implPanel, implWidget;
-function $clinit_65(){
-  $clinit_65 = nullMethod;
-  $clinit_67();
-}
-
-function $createBlurHandler(){
-  return function(evt){
-    if (this.parentNode.onblur) {
-      this.parentNode.onblur(evt);
-    }
-  }
-  ;
-}
-
-function $createFocusHandler(){
-  return function(evt){
-    if (this.parentNode.onfocus) {
-      this.parentNode.onfocus(evt);
-    }
-  }
-  ;
-}
-
-function $createFocusable(this$static){
-  var div = $doc.createElement('div');
-  var input = this$static.createHiddenInput();
-  input.addEventListener('blur', this$static.blurHandler, false);
-  input.addEventListener('focus', this$static.focusHandler, false);
-  div.addEventListener('mousedown', this$static.mouseHandler, false);
-  div.appendChild(input);
-  return div;
-}
-
-function createHiddenInput(){
-  var input = $doc.createElement('input');
-  input.type = 'text';
-  input.style.width = input.style.height = 0;
-  input.style.zIndex = -1;
-  input.style.position = 'absolute';
-  return input;
-}
-
-function setTabIndex(elem, index){
-  elem.firstChild.tabIndex = index;
-}
-
-function FocusImplOld(){
-}
-
-_ = FocusImplOld.prototype = new FocusImpl();
-_.createHiddenInput = createHiddenInput;
-_.setTabIndex = setTabIndex;
-_.typeId$ = 0;
-function $clinit_66(){
-  $clinit_66 = nullMethod;
-  $clinit_65();
-}
-
-function $FocusImplSafari(this$static){
-  $clinit_66();
-  this$static.blurHandler = $createBlurHandler();
-  this$static.focusHandler = $createFocusHandler();
-  this$static.mouseHandler = $createMouseHandler();
-  return this$static;
-}
-
-function $createMouseHandler(){
-  return function(){
-    var firstChild = this.firstChild;
-    $wnd.setTimeout(function(){
-      firstChild.focus();
-    }
-    , 0);
-  }
-  ;
-}
-
-function createHiddenInput_0(){
-  var input = $doc.createElement('input');
-  input.type = 'text';
-  input.style.opacity = 0;
-  input.style.zIndex = -1;
-  input.style.height = '1px';
-  input.style.width = '1px';
-  input.style.overflow = 'hidden';
-  input.style.position = 'absolute';
-  return input;
-}
-
-function FocusImplSafari(){
-}
-
-_ = FocusImplSafari.prototype = new FocusImplOld();
-_.createHiddenInput = createHiddenInput_0;
-_.typeId$ = 0;
 function Throwable(){
 }
 
@@ -1816,8 +1647,8 @@ _ = String.prototype;
 _.equals$ = equals_1;
 _.hashCode$ = hashCode_2;
 _.typeId$ = 2;
-function $clinit_82(){
-  $clinit_82 = nullMethod;
+function $clinit_80(){
+  $clinit_80 = nullMethod;
   back = {};
   front = {};
 }
@@ -1836,7 +1667,7 @@ function compute(str){
 }
 
 function getHashCode_0(str){
-  $clinit_82();
+  $clinit_80();
   var key = ':' + str;
   var result = front[key];
   if (result != null) {
@@ -1860,6 +1691,46 @@ function increment(){
 }
 
 var back, count_0 = 0, front;
+function $StringBuilder(this$static){
+  this$static.stringArray = initDim(_3Ljava_lang_String_2_classLit, 0, 1, 0, 0);
+  return this$static;
+}
+
+function $append(this$static, toAppend){
+  var appendLength;
+  if (toAppend == null) {
+    toAppend = 'null';
+  }
+  appendLength = toAppend.length;
+  if (appendLength > 0) {
+    this$static.stringArray[this$static.arrayLen++] = toAppend;
+    this$static.stringLength += appendLength;
+    if (this$static.arrayLen > 1024) {
+      $toString(this$static);
+      this$static.stringArray.length = 1024;
+    }
+  }
+  return this$static;
+}
+
+function $toString(this$static){
+  var s;
+  if (this$static.arrayLen != 1) {
+    this$static.stringArray.length = this$static.arrayLen;
+    s = this$static.stringArray.join('');
+    this$static.stringArray = initValues(_3Ljava_lang_String_2_classLit, 0, 1, [s]);
+    this$static.arrayLen = 1;
+  }
+  return this$static.stringArray[0];
+}
+
+function StringBuilder(){
+}
+
+_ = StringBuilder.prototype = new Object_0();
+_.typeId$ = 42;
+_.arrayLen = 0;
+_.stringLength = 0;
 function UnsupportedOperationException(){
 }
 
@@ -2449,7 +2320,4 @@ function gwtOnLoad(errFn, modName, modBase){
 function nullMethod(){
 }
 
-var _3_3Z_classLit = createForArray('', '[[Z'), _3Z_classLit = createForArray('', '[Z'), _3Lcom_google_gwt_user_client_ui_Widget_2_classLit = createForArray('[Lcom.google.gwt.user.client.ui.', 'Widget;'), _3Ljava_lang_Object_2_classLit = createForArray('[Ljava.lang.', 'Object;');
-$stats && $stats({moduleName:'com.boscomonkey.gwtraster.GwtRaster',subSystem:'startup',evtGroup:'moduleStartup',millis:(new Date()).getTime(),type:'moduleEvalEnd'});
-if ($wnd.com_boscomonkey_gwtraster_GwtRaster) $wnd.com_boscomonkey_gwtraster_GwtRaster.onScriptLoad();
---></script></body></html>
+var _3_3Z_classLit = createForArray('', '[[Z'), _3Z_classLit = createForArray('', '[Z'), _3Ljava_lang_String_2_classLit = createForArray('[Ljava.lang.', 'String;'), _3Lcom_google_gwt_user_client_ui_Widget_2_classLit = createForArray('[Lcom.google.gwt.user.client.ui.', 'Widget;'), _3Ljava_lang_Object_2_classLit = createForArray('[Ljava.lang.', 'Object;');

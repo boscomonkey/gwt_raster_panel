@@ -43,15 +43,13 @@ that to the DOM.<br>
 </p>
 <pre style="margin-left: 40px;">Button btnClear = new Button("Clear");<br>btnClear.addClickListener(new ClickListener() {<br>    public void onClick(Widget sender) {<br>        rasterPanel.clear();<br>    }<br>});<br>RootPanel.get("div2").add(btnClear);<br></pre>
 <p> </p>
-<p>Call RasterPanel#getEngaged() to retrieve all the "dots" that are
+<p>Call RasterPanel#getCoords() to retrieve the coordinates (class
+XyCoord) of all the "dots" that are
 turned on.<br>
 </p>
-<pre style="margin-left: 40px;">HashSet engagedDots = rasterPanel.getEngaged()<br></pre>
+<pre style="margin-left: 40px;">Collection coords = rasterPanel.getCoords();<br></pre>
 <h2>To Do</h2>
 <ol>
-  <li>Implement RasterPanel#getEngaged() to retrieve all the engaged
-"pixels" upon submission
-(or other events).</li>
   <li>Add or document ways to use this widget outside GWT with plain
 JavaScript.<br>
   </li>

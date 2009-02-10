@@ -220,11 +220,11 @@ function com_boscomonkey_gwtraster_GwtRaster(){
   }
    else {
     try {
-      unflattenKeylistIntoAnswers(['gecko1_8'], '832336F56100AC28DC437ED2DCC0D1AD.cache.html');
-      unflattenKeylistIntoAnswers(['opera'], '157EFFA6A7316416A89F3A3DF680D090.cache.html');
-      unflattenKeylistIntoAnswers(['ie6'], 'FCB5FBF553DA6D231C8F4C8DFEAA9B31.cache.html');
-      unflattenKeylistIntoAnswers(['safari'], 'EE272E682D1761DD5E065F8A72CF1E7D.cache.html');
-      unflattenKeylistIntoAnswers(['gecko'], 'AE8698EE3309BA1D2348308C5CAA85EE.cache.html');
+      unflattenKeylistIntoAnswers(['gecko1_8'], '60B4BC9B2D0AF15AE8BDB80F97ED2AE3.cache.html');
+      unflattenKeylistIntoAnswers(['opera'], 'B212FE019711CEAAA5C1598BC9D917E1.cache.html');
+      unflattenKeylistIntoAnswers(['ie6'], 'FB943973F1FA6388B5D303EB25915ED8.cache.html');
+      unflattenKeylistIntoAnswers(['safari'], '8CB8207425B9C86AB9075609FE1FBEDB.cache.html');
+      unflattenKeylistIntoAnswers(['gecko'], 'D2617318FF630D50816FBC0FE482B646.cache.html');
       strongName = answers[computePropValue('user.agent')];
     }
      catch (e) {

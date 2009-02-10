@@ -37,13 +37,23 @@ public class GwtRaster implements EntryPoint {
         btnCoords.addClickListener(new ClickListener() {
             public void onClick(Widget sender) {
                 Collection coords = rasterPanel.getCoords();
+                StringBuilder buf = new StringBuilder();
+                boolean firstElt = true;
                 for (Iterator iter = coords.iterator(); iter.hasNext(); /**/) {
-                    XyCoord coord = (XyCoord) iter.next();
-                    if (GWT.isScript())
-                        Window.alert(coord.toString());
+                    if (firstElt)
+                        firstElt = false;
                     else
-                        GWT.log(coord.toString(), null);
+                        buf.append(", ");
+
+                    XyCoord coord = (XyCoord) iter.next();
+                    buf.append(coord.toString());
                 }
+
+                if (GWT.isScript()) {
+                    Window.alert(buf.toString());
+                }
+                else
+                    GWT.log(buf.toString(), null);
             }
         });
         RootPanel.get("slot3").add(btnCoords);

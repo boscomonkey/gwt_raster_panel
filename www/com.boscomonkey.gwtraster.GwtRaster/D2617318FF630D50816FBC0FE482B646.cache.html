@@ -48,12 +48,19 @@ function $GwtRaster$2(this$static, val$rasterPanel){
 }
 
 function onClick_0(sender){
-  var coord, coords, iter;
+  var buf, coord, coords, firstElt, iter;
   coords = $getCoords(this.val$rasterPanel);
+  buf = $StringBuilder(new StringBuilder());
+  firstElt = true;
   for (iter = $AbstractList$IteratorImpl(new AbstractList$IteratorImpl(), coords); iter.i < iter.this$0.size_0();) {
+    if (firstElt)
+      firstElt = false;
+    else 
+      $append(buf, ', ');
     coord = dynamicCast($next_0(iter), 2);
-    $wnd.alert('(' + coord.x + ', ' + coord.y + ')');
+    $append(buf, '(' + coord.x_0 + ', ' + coord.y_0 + ')');
   }
+  $wnd.alert($toString(buf));
 }
 
 function GwtRaster$2(){
@@ -281,9 +288,9 @@ function $RasterPanel(this$static, numX, numY, pixW, pixY, border){
   $initWidget(this$static, focus);
   setStyleName(focus.element, 'cbg-RasterPanel', true);
   $addMouseListener(focus, this$static.mouseListener);
-  this$static.width = this$static.nPixelsX * this$static.pixWidth;
-  this$static.height = this$static.nPixelsY * this$static.pixHeight;
-  $setPixelSize(focus, this$static.width, this$static.height);
+  this$static.width_0 = this$static.nPixelsX * this$static.pixWidth;
+  this$static.height_0 = this$static.nPixelsY * this$static.pixHeight;
+  $setPixelSize(focus, this$static.width_0, this$static.height_0);
   this$static.dotsPanel = $FlowPanel(new FlowPanel());
   $setWidget(focus, this$static.dotsPanel);
   setStyleName(this$static.dotsPanel.element, 'cbg-RasterPanel-panel', true);
@@ -299,7 +306,7 @@ function $clear(this$static){
     pix = dynamicCast($get(this$static.dotsPanel.children, i), 3);
     setStyleName(pix.element, 'cbg-RasterPixel-engaged', false);
     xy = pix.coord;
-    this$static.xyFlags[xy.x][xy.y] = false;
+    this$static.xyFlags[xy.x_0][xy.y_0] = false;
   }
   $clear_0(this$static.dotsPanel);
 }
@@ -323,12 +330,12 @@ _.typeId$ = 8;
 _.bMouseDown = false;
 _.borderedDots = false;
 _.dotsPanel = null;
-_.height = 0;
+_.height_0 = 0;
 _.nPixelsX = 0;
 _.nPixelsY = 0;
 _.pixHeight = 0;
 _.pixWidth = 0;
-_.width = 0;
+_.width_0 = 0;
 _.xyFlags = null;
 function onMouseDown_0(sender, x, y){
 }
@@ -369,7 +376,7 @@ function onMouseDown(sender, x, y){
 
 function onMouseMove(sender, x, y){
   var dot, i, j;
-  if (this.this$0.bMouseDown && x >= 0 && y >= 0 && x < this.this$0.width && y < this.this$0.height) {
+  if (this.this$0.bMouseDown && x >= 0 && y >= 0 && x < this.this$0.width_0 && y < this.this$0.height_0) {
     i = ~~(x / this.this$0.pixWidth);
     j = ~~(y / this.this$0.pixHeight);
     if (!this.this$0.xyFlags[i][j]) {
@@ -400,16 +407,16 @@ _.this$0 = null;
 function $RasterPixel(this$static, x, y, w, h, border){
   var dot, pixelX, pixelY;
   this$static.coord = $XyCoord(new XyCoord(), x, y);
-  this$static.width = w;
-  this$static.height = h;
+  this$static.width_0 = w;
+  this$static.height_0 = h;
   dot = $SimplePanel(new SimplePanel());
   $initWidget(this$static, dot);
   setStyleName(dot.element, 'cbg-RasterPixel', true);
-  pixelX = '' + this$static.coord.x * this$static.width + 'px';
-  pixelY = '' + this$static.coord.y * this$static.height + 'px';
+  pixelX = '' + this$static.coord.x_0 * this$static.width_0 + 'px';
+  pixelY = '' + this$static.coord.y_0 * this$static.height_0 + 'px';
   this$static.element.style['left'] = pixelX;
   this$static.element.style['top'] = pixelY;
-  $setPixelSize(this$static, border?this$static.width - 1:this$static.width, border?this$static.height - 1:this$static.height);
+  $setPixelSize(this$static, border?this$static.width_0 - 1:this$static.width_0, border?this$static.height_0 - 1:this$static.height_0);
   return this$static;
 }
 
@@ -419,11 +426,11 @@ function RasterPixel(){
 _ = RasterPixel.prototype = new Composite();
 _.typeId$ = 11;
 _.coord = null;
-_.height = 0;
-_.width = 0;
+_.height_0 = 0;
+_.width_0 = 0;
 function $XyCoord(this$static, x, y){
-  this$static.x = x;
-  this$static.y = y;
+  this$static.x_0 = x;
+  this$static.y_0 = y;
   return this$static;
 }
 
@@ -432,8 +439,8 @@ function XyCoord(){
 
 _ = XyCoord.prototype = new Object_0();
 _.typeId$ = 12;
-_.x = 0;
-_.y = 0;
+_.x_0 = 0;
+_.y_0 = 0;
 function equals__devirtual$(this$static, other){
   return this$static.typeMarker$ == nullMethod || this$static.typeId$ == 2?this$static.equals$(other):(this$static == null?null:this$static) === (other == null?null:other);
 }
@@ -454,35 +461,29 @@ function $getParentElement(elem){
 }
 
 function $getAbsoluteLeft(elem){
-  var left = 0;
-  var curr = elem.parentNode;
-  while (curr && curr.offsetParent) {
-    if (curr.tagName != 'TR' && curr.tagName != 'TBODY') {
-      left -= curr.scrollLeft;
+  var style = $doc.defaultView.getComputedStyle(elem, null);
+  var left = $doc.getBoxObjectFor(elem).x - Math.round(style.getPropertyCSSValue('border-left-width').getFloatValue(CSSPrimitiveValue.CSS_PX));
+  var parent = elem.parentNode;
+  while (parent) {
+    if (parent.scrollLeft > 0) {
+      left -= parent.scrollLeft;
     }
-    curr = curr.parentNode;
+    parent = parent.parentNode;
   }
-  while (elem) {
-    left += elem.offsetLeft;
-    elem = elem.offsetParent;
-  }
-  return left;
+  return left + ($clinit_30() , documentRoot).scrollLeft;
 }
 
 function $getAbsoluteTop(elem){
-  var top = 0;
-  var curr = elem.parentNode;
-  while (curr && curr.offsetParent) {
-    if (curr.tagName != 'TR' && curr.tagName != 'TBODY') {
-      top -= curr.scrollTop;
+  var style = $doc.defaultView.getComputedStyle(elem, null);
+  var top = $doc.getBoxObjectFor(elem).y - Math.round(style.getPropertyCSSValue('border-top-width').getFloatValue(CSSPrimitiveValue.CSS_PX));
+  var parent = elem.parentNode;
+  while (parent) {
+    if (parent.scrollTop > 0) {
+      top -= parent.scrollTop;
     }
-    curr = curr.parentNode;
+    parent = parent.parentNode;
   }
-  while (elem) {
-    top += elem.offsetTop;
-    elem = elem.offsetParent;
-  }
-  return top;
+  return top + ($clinit_30() , documentRoot).scrollTop;
 }
 
 function createFromSeed(seedType, length){
@@ -595,26 +596,8 @@ function setCapture(elem){
 
 function sinkEvents(elem, eventBits){
   $maybeInitializeEventSystem();
-  elem.__eventBits = eventBits;
-  elem.onclick = eventBits & 1?dispatchEvent_0:null;
-  elem.ondblclick = eventBits & 2?dispatchEvent_0:null;
-  elem.onmousedown = eventBits & 4?dispatchEvent_0:null;
-  elem.onmouseup = eventBits & 8?dispatchEvent_0:null;
-  elem.onmouseover = eventBits & 16?dispatchEvent_0:null;
-  elem.onmouseout = eventBits & 32?dispatchEvent_0:null;
-  elem.onmousemove = eventBits & 64?dispatchEvent_0:null;
-  elem.onkeydown = eventBits & 128?dispatchEvent_0:null;
-  elem.onkeypress = eventBits & 256?dispatchEvent_0:null;
-  elem.onkeyup = eventBits & 512?dispatchEvent_0:null;
-  elem.onchange = eventBits & 1024?dispatchEvent_0:null;
-  elem.onfocus = eventBits & 2048?dispatchEvent_0:null;
-  elem.onblur = eventBits & 4096?dispatchEvent_0:null;
-  elem.onlosecapture = eventBits & 8192?dispatchEvent_0:null;
-  elem.onscroll = eventBits & 16384?dispatchEvent_0:null;
-  elem.onload = eventBits & 32768?dispatchEvent_0:null;
-  elem.onerror = eventBits & 65536?dispatchEvent_0:null;
-  elem.onmousewheel = eventBits & 131072?dispatchEvent_0:null;
-  elem.oncontextmenu = eventBits & 262144?dispatchEvent_0:null;
+  $sinkEventsImpl(elem, eventBits);
+  $sinkEventsMozilla(elem, eventBits);
 }
 
 var currentEvent = null, sCaptureElem = null;
@@ -716,6 +699,7 @@ function $eventGetTypeInt(evt){
 function $maybeInitializeEventSystem(){
   if (!eventSystemIsInitialized) {
     $initEventSystem();
+    $initSyntheticMouseUpEvents();
     eventSystemIsInitialized = true;
   }
 }
@@ -792,10 +776,76 @@ function $releaseCaptureImpl(elem){
   }
 }
 
+function $sinkEventsImpl(elem, bits){
+  var chMask = (elem.__eventBits || 0) ^ bits;
+  elem.__eventBits = bits;
+  if (!chMask)
+    return;
+  if (chMask & 1)
+    elem.onclick = bits & 1?dispatchEvent_0:null;
+  if (chMask & 2)
+    elem.ondblclick = bits & 2?dispatchEvent_0:null;
+  if (chMask & 4)
+    elem.onmousedown = bits & 4?dispatchEvent_0:null;
+  if (chMask & 8)
+    elem.onmouseup = bits & 8?dispatchEvent_0:null;
+  if (chMask & 16)
+    elem.onmouseover = bits & 16?dispatchEvent_0:null;
+  if (chMask & 32)
+    elem.onmouseout = bits & 32?dispatchEvent_0:null;
+  if (chMask & 64)
+    elem.onmousemove = bits & 64?dispatchEvent_0:null;
+  if (chMask & 128)
+    elem.onkeydown = bits & 128?dispatchEvent_0:null;
+  if (chMask & 256)
+    elem.onkeypress = bits & 256?dispatchEvent_0:null;
+  if (chMask & 512)
+    elem.onkeyup = bits & 512?dispatchEvent_0:null;
+  if (chMask & 1024)
+    elem.onchange = bits & 1024?dispatchEvent_0:null;
+  if (chMask & 2048)
+    elem.onfocus = bits & 2048?dispatchEvent_0:null;
+  if (chMask & 4096)
+    elem.onblur = bits & 4096?dispatchEvent_0:null;
+  if (chMask & 8192)
+    elem.onlosecapture = bits & 8192?dispatchEvent_0:null;
+  if (chMask & 16384)
+    elem.onscroll = bits & 16384?dispatchEvent_0:null;
+  if (chMask & 32768)
+    elem.onload = bits & 32768?dispatchEvent_0:null;
+  if (chMask & 65536)
+    elem.onerror = bits & 65536?dispatchEvent_0:null;
+  if (chMask & 131072)
+    elem.onmousewheel = bits & 131072?dispatchEvent_0:null;
+  if (chMask & 262144)
+    elem.oncontextmenu = bits & 262144?dispatchEvent_0:null;
+}
+
 var captureElem = null, dispatchCapturedEvent = null, dispatchCapturedMouseEvent = null, dispatchEvent_0 = null;
-function $clinit_29(){
-  $clinit_29 = nullMethod;
-  documentRoot = $getDocumentRoot(($clinit_29() , new DocumentRootImpl()));
+function $initSyntheticMouseUpEvents(){
+  $wnd.addEventListener('mouseout', function(evt){
+    var cap = $wnd.__captureElem;
+    if (cap && !evt.relatedTarget) {
+      if ('html' == evt.target.tagName.toLowerCase()) {
+        var muEvent = $doc.createEvent('MouseEvents');
+        muEvent.initMouseEvent('mouseup', true, true, $wnd, 0, evt.screenX, evt.screenY, evt.clientX, evt.clientY, evt.ctrlKey, evt.altKey, evt.shiftKey, evt.metaKey, evt.button, null);
+        cap.dispatchEvent(muEvent);
+      }
+    }
+  }
+  , true);
+  $wnd.addEventListener('DOMMouseScroll', dispatchCapturedMouseEvent, true);
+}
+
+function $sinkEventsMozilla(elem, bits){
+  if (bits & 131072) {
+    elem.addEventListener('DOMMouseScroll', dispatchEvent_0, false);
+  }
+}
+
+function $clinit_30(){
+  $clinit_30 = nullMethod;
+  documentRoot = $getDocumentRoot(($clinit_30() , new DocumentRootImpl()));
 }
 
 function $getDocumentRoot(){
@@ -907,6 +957,11 @@ function AbsolutePanel(){
 _ = AbsolutePanel.prototype = new ComplexPanel();
 _.remove = remove;
 _.typeId$ = 19;
+function $clinit_42(){
+  $clinit_42 = nullMethod;
+  impl_0 = ($clinit_67() , implWidget);
+}
+
 function $addClickListener(this$static, listener){
   if (!this$static.clickListeners) {
     this$static.clickListeners = $ClickListenerCollection(new ClickListenerCollection());
@@ -930,9 +985,16 @@ _ = FocusWidget.prototype = new Widget();
 _.onBrowserEvent = onBrowserEvent_1;
 _.typeId$ = 20;
 _.clickListeners = null;
+var impl_0;
+function $clinit_34(){
+  $clinit_34 = nullMethod;
+  $clinit_42();
+}
+
 function $ButtonBase(this$static, elem){
+  $clinit_34();
   this$static.element = elem;
-  this$static.element.tabIndex = 0;
+  impl_0.setTabIndex(this$static.element, 0);
   return this$static;
 }
 
@@ -941,7 +1003,13 @@ function ButtonBase(){
 
 _ = ButtonBase.prototype = new FocusWidget();
 _.typeId$ = 21;
+function $clinit_35(){
+  $clinit_35 = nullMethod;
+  $clinit_34();
+}
+
 function $Button_0(this$static, html){
+  $clinit_35();
   $ButtonBase(this$static, $doc.createElement('button'));
   adjustType(this$static.element);
   this$static.element['className'] = 'gwt-Button';
@@ -990,7 +1058,7 @@ function AbstractCollection(){
 
 _ = AbstractCollection.prototype = new Object_0();
 _.add_0 = add_0;
-_.contains_0 = contains;
+_.contains = contains;
 _.typeId$ = 0;
 function add_2(obj){
   this.add(this.size_0(), obj);
@@ -1111,7 +1179,7 @@ function ArrayList(){
 _ = ArrayList.prototype = new AbstractList();
 _.add_0 = add_4;
 _.add = add_3;
-_.contains_0 = contains_2;
+_.contains = contains_2;
 _.get = get_1;
 _.size_0 = size_2;
 _.typeId$ = 24;
@@ -1199,9 +1267,14 @@ _.iterator = iterator_0;
 _.remove = remove_1;
 _.typeId$ = 27;
 _.widget = null;
+function $clinit_41(){
+  $clinit_41 = nullMethod;
+  impl = ($clinit_67() , implPanel);
+}
+
 function $FocusPanel(this$static){
-  var e;
-  this$static.element = (e = $doc.createElement('DIV') , e.tabIndex = 0 , e);
+  $clinit_41();
+  this$static.element = $createFocusable(impl);
   sinkEvents(this$static.element, 138237 | (this$static.element.__eventBits || 0));
   return this$static;
 }
@@ -1234,6 +1307,7 @@ _ = FocusPanel.prototype = new SimplePanel();
 _.onBrowserEvent = onBrowserEvent_0;
 _.typeId$ = 28;
 _.mouseListeners = null;
+var impl;
 function $MouseListenerCollection(this$static){
   this$static.array = initDim(_3Ljava_lang_Object_2_classLit, 0, 0, 0, 0);
   this$static.size = 0;
@@ -1259,7 +1333,7 @@ function $fireMouseEnter(this$static, sender){
 function $fireMouseEvent(this$static, sender, event_0){
   var from, senderElem, to, x, y;
   senderElem = sender.element;
-  x = (event_0.clientX || 0) - $getAbsoluteLeft(senderElem) + (parseInt(senderElem['scrollLeft']) || 0) + ($clinit_29() , documentRoot).scrollLeft;
+  x = (event_0.clientX || 0) - $getAbsoluteLeft(senderElem) + (parseInt(senderElem['scrollLeft']) || 0) + ($clinit_30() , documentRoot).scrollLeft;
   y = (event_0.clientY || 0) - $getAbsoluteTop(senderElem) + (parseInt(senderElem['scrollTop']) || 0) + documentRoot.scrollTop;
   switch ($eventGetTypeInt(event_0)) {
     case 4:
@@ -1273,14 +1347,14 @@ function $fireMouseEvent(this$static, sender, event_0){
       break;
     case 16:
       from = $eventGetFromElement(event_0);
-      if (!from || !senderElem.contains(from)) {
+      if (!from || !(senderElem === from || !!(senderElem.compareDocumentPosition(from) & 16))) {
         $fireMouseEnter(this$static, sender);
       }
 
       break;
     case 32:
       to = $eventGetToElement(event_0);
-      if (!to || !senderElem.contains(to)) {
+      if (!to || !(senderElem === to || !!(senderElem.compareDocumentPosition(to) & 16))) {
         $fireMouseLeave(this$static, sender);
       }
 
@@ -1316,14 +1390,14 @@ function MouseListenerCollection(){
 
 _ = MouseListenerCollection.prototype = new ArrayList();
 _.typeId$ = 29;
-function $clinit_53(){
-  $clinit_53 = nullMethod;
+function $clinit_54(){
+  $clinit_54 = nullMethod;
   rootPanels = $HashMap(new HashMap());
   widgetsToDetach = $HashSet(new HashSet());
 }
 
 function $RootPanel(this$static, elem){
-  $clinit_53();
+  $clinit_54();
   this$static.children = $WidgetCollection(new WidgetCollection(), this$static);
   this$static.element = elem;
   $onAttach(this$static);
@@ -1332,7 +1406,7 @@ function $RootPanel(this$static, elem){
 
 function detachWidgets(){
   var outerIter, entry;
-  $clinit_53();
+  $clinit_54();
   var widget, widget$iterator;
   for (widget$iterator = (outerIter = $AbstractHashMap$EntrySetIterator(new AbstractHashMap$EntrySetIterator(), $keySet(widgetsToDetach.map).val$entrySet.this$0) , $AbstractMap$1$1(new AbstractMap$1$1(), outerIter)); $hasNext(widget$iterator.val$outerIter.iter);) {
     widget = dynamicCast((entry = dynamicCast($next_0(widget$iterator.val$outerIter.iter), 15) , entry.getKey()), 9);
@@ -1343,7 +1417,7 @@ function detachWidgets(){
 }
 
 function get_0(id){
-  $clinit_53();
+  $clinit_54();
   var elem, rp;
   rp = dynamicCast($get_0(rootPanels, id), 10);
   if (rp) {
@@ -1380,13 +1454,13 @@ function RootPanel$1(){
 
 _ = RootPanel$1.prototype = new Object_0();
 _.typeId$ = 31;
-function $clinit_52(){
-  $clinit_52 = nullMethod;
-  $clinit_53();
+function $clinit_53(){
+  $clinit_53 = nullMethod;
+  $clinit_54();
 }
 
 function $RootPanel$DefaultRootPanel(this$static){
-  $clinit_52();
+  $clinit_53();
   $RootPanel(this$static, $doc.body);
   return this$static;
 }
@@ -1533,6 +1607,91 @@ _.next = next_1;
 _.typeId$ = 0;
 _.index = -1;
 _.this$0 = null;
+function $clinit_67(){
+  $clinit_67 = nullMethod;
+  implPanel = $FocusImplOld(new FocusImplOld());
+  implWidget = implPanel?($clinit_67() , new FocusImpl()):implPanel;
+}
+
+function setTabIndex_0(elem, index){
+  elem.tabIndex = index;
+}
+
+function FocusImpl(){
+}
+
+_ = FocusImpl.prototype = new Object_0();
+_.setTabIndex = setTabIndex_0;
+_.typeId$ = 0;
+var implPanel, implWidget;
+function $clinit_66(){
+  $clinit_66 = nullMethod;
+  $clinit_67();
+}
+
+function $FocusImplOld(this$static){
+  $clinit_66();
+  this$static.blurHandler = $createBlurHandler();
+  this$static.focusHandler = $createFocusHandler();
+  this$static.mouseHandler = $createMouseHandler();
+  return this$static;
+}
+
+function $createBlurHandler(){
+  return function(evt){
+    if (this.parentNode.onblur) {
+      this.parentNode.onblur(evt);
+    }
+  }
+  ;
+}
+
+function $createFocusHandler(){
+  return function(evt){
+    if (this.parentNode.onfocus) {
+      this.parentNode.onfocus(evt);
+    }
+  }
+  ;
+}
+
+function $createFocusable(this$static){
+  var div = $doc.createElement('div');
+  var input = this$static.createHiddenInput();
+  input.addEventListener('blur', this$static.blurHandler, false);
+  input.addEventListener('focus', this$static.focusHandler, false);
+  div.addEventListener('mousedown', this$static.mouseHandler, false);
+  div.appendChild(input);
+  return div;
+}
+
+function $createMouseHandler(){
+  return function(){
+    this.firstChild.focus();
+  }
+  ;
+}
+
+function createHiddenInput(){
+  var input = $doc.createElement('input');
+  input.type = 'text';
+  input.style.width = input.style.height = 0;
+  input.style.zIndex = -1;
+  input.style.position = 'absolute';
+  return input;
+}
+
+function setTabIndex(elem, index){
+  elem.firstChild.tabIndex = index;
+}
+
+function FocusImplOld(){
+}
+
+_ = FocusImplOld.prototype = new FocusImpl();
+_.createHiddenInput = createHiddenInput;
+_.setTabIndex = setTabIndex;
+_.typeId$ = 0;
 function Throwable(){
 }
 
@@ -1616,8 +1775,8 @@ _ = String.prototype;
 _.equals$ = equals_1;
 _.hashCode$ = hashCode_2;
 _.typeId$ = 2;
-function $clinit_80(){
-  $clinit_80 = nullMethod;
+function $clinit_82(){
+  $clinit_82 = nullMethod;
   back = {};
   front = {};
 }
@@ -1636,7 +1795,7 @@ function compute(str){
 }
 
 function getHashCode_0(str){
-  $clinit_80();
+  $clinit_82();
   var key = ':' + str;
   var result = front[key];
   if (result != null) {
@@ -1660,6 +1819,46 @@ function increment(){
 }
 
 var back, count_0 = 0, front;
+function $StringBuilder(this$static){
+  this$static.stringArray = initDim(_3Ljava_lang_String_2_classLit, 0, 1, 0, 0);
+  return this$static;
+}
+
+function $append(this$static, toAppend){
+  var appendLength;
+  if (toAppend == null) {
+    toAppend = 'null';
+  }
+  appendLength = toAppend.length;
+  if (appendLength > 0) {
+    this$static.stringArray[this$static.arrayLen++] = toAppend;
+    this$static.stringLength += appendLength;
+    if (this$static.arrayLen > 1024) {
+      $toString(this$static);
+      this$static.stringArray.length = 1024;
+    }
+  }
+  return this$static;
+}
+
+function $toString(this$static){
+  var s;
+  if (this$static.arrayLen != 1) {
+    this$static.stringArray.length = this$static.arrayLen;
+    s = this$static.stringArray.join('');
+    this$static.stringArray = initValues(_3Ljava_lang_String_2_classLit, 0, 1, [s]);
+    this$static.arrayLen = 1;
+  }
+  return this$static.stringArray[0];
+}
+
+function StringBuilder(){
+}
+
+_ = StringBuilder.prototype = new Object_0();
+_.typeId$ = 42;
+_.arrayLen = 0;
+_.stringLength = 0;
 function UnsupportedOperationException(){
 }
 
@@ -1856,7 +2055,7 @@ function equals_5(o){
   }
   for (iter = other.iterator(); iter.hasNext();) {
     otherItem = iter.next();
-    if (!this.contains_0(otherItem)) {
+    if (!this.contains(otherItem)) {
       return false;
     }
   }
@@ -1913,7 +2112,7 @@ function AbstractHashMap$EntrySet(){
 }
 
 _ = AbstractHashMap$EntrySet.prototype = new AbstractSet();
-_.contains_0 = contains_0;
+_.contains = contains_0;
 _.iterator = iterator_1;
 _.size_0 = size_0;
 _.typeId$ = 45;
@@ -2093,7 +2292,7 @@ function AbstractMap$1(){
 }
 
 _ = AbstractMap$1.prototype = new AbstractSet();
-_.contains_0 = contains_1;
+_.contains = contains_1;
 _.iterator = iterator_3;
 _.size_0 = size_1;
 _.typeId$ = 49;
@@ -2173,7 +2372,7 @@ function HashSet(){
 
 _ = HashSet.prototype = new AbstractSet();
 _.add_0 = add_5;
-_.contains_0 = contains_3;
+_.contains = contains_3;
 _.iterator = iterator_4;
 _.size_0 = size_3;
 _.typeId$ = 51;
@@ -2249,7 +2448,7 @@ function gwtOnLoad(errFn, modName, modBase){
 function nullMethod(){
 }
 
-var _3_3Z_classLit = createForArray('', '[[Z'), _3Z_classLit = createForArray('', '[Z'), _3Lcom_google_gwt_user_client_ui_Widget_2_classLit = createForArray('[Lcom.google.gwt.user.client.ui.', 'Widget;'), _3Ljava_lang_Object_2_classLit = createForArray('[Ljava.lang.', 'Object;');
+var _3_3Z_classLit = createForArray('', '[[Z'), _3Z_classLit = createForArray('', '[Z'), _3Ljava_lang_String_2_classLit = createForArray('[Ljava.lang.', 'String;'), _3Lcom_google_gwt_user_client_ui_Widget_2_classLit = createForArray('[Lcom.google.gwt.user.client.ui.', 'Widget;'), _3Ljava_lang_Object_2_classLit = createForArray('[Ljava.lang.', 'Object;');
 $stats && $stats({moduleName:'com.boscomonkey.gwtraster.GwtRaster',subSystem:'startup',evtGroup:'moduleStartup',millis:(new Date()).getTime(),type:'moduleEvalEnd'});
 if ($wnd.com_boscomonkey_gwtraster_GwtRaster) $wnd.com_boscomonkey_gwtraster_GwtRaster.onScriptLoad();
 --></script></body></html>

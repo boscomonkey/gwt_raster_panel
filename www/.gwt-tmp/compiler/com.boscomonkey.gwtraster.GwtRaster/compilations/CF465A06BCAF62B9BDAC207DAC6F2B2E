@@ -37,12 +37,19 @@ function $GwtRaster$2(this$static, val$rasterPanel){
 }
 
 function onClick_0(sender){
-  var coord, coords, iter;
+  var buf, coord, coords, firstElt, iter;
   coords = $getCoords(this.val$rasterPanel);
+  buf = $StringBuilder(new StringBuilder());
+  firstElt = true;
   for (iter = $AbstractList$IteratorImpl(new AbstractList$IteratorImpl(), coords); iter.i < iter.this$0.size_0();) {
+    if (firstElt)
+      firstElt = false;
+    else 
+      $append(buf, ', ');
     coord = dynamicCast($next_0(iter), 2);
-    $wnd.alert('(' + coord.x_0 + ', ' + coord.y_0 + ')');
+    $append(buf, '(' + coord.x_0 + ', ' + coord.y_0 + ')');
   }
+  $wnd.alert($toString(buf));
 }
 
 function GwtRaster$2(){
@@ -1801,6 +1808,46 @@ function increment(){
 }
 
 var back, count_0 = 0, front;
+function $StringBuilder(this$static){
+  this$static.stringArray = initDim(_3Ljava_lang_String_2_classLit, 0, 1, 0, 0);
+  return this$static;
+}
+
+function $append(this$static, toAppend){
+  var appendLength;
+  if (toAppend == null) {
+    toAppend = 'null';
+  }
+  appendLength = toAppend.length;
+  if (appendLength > 0) {
+    this$static.stringArray[this$static.arrayLen++] = toAppend;
+    this$static.stringLength += appendLength;
+    if (this$static.arrayLen > 1024) {
+      $toString(this$static);
+      this$static.stringArray.length = 1024;
+    }
+  }
+  return this$static;
+}
+
+function $toString(this$static){
+  var s;
+  if (this$static.arrayLen != 1) {
+    this$static.stringArray.length = this$static.arrayLen;
+    s = this$static.stringArray.join('');
+    this$static.stringArray = initValues(_3Ljava_lang_String_2_classLit, 0, 1, [s]);
+    this$static.arrayLen = 1;
+  }
+  return this$static.stringArray[0];
+}
+
+function StringBuilder(){
+}
+
+_ = StringBuilder.prototype = new Object_0();
+_.typeId$ = 42;
+_.arrayLen = 0;
+_.stringLength = 0;
 function UnsupportedOperationException(){
 }
 
@@ -2390,4 +2437,4 @@ function gwtOnLoad(errFn, modName, modBase){
 function nullMethod(){
 }
 
-var _3_3Z_classLit = createForArray('', '[[Z'), _3Z_classLit = createForArray('', '[Z'), _3Lcom_google_gwt_user_client_ui_Widget_2_classLit = createForArray('[Lcom.google.gwt.user.client.ui.', 'Widget;'), _3Ljava_lang_Object_2_classLit = createForArray('[Ljava.lang.', 'Object;');
+var _3_3Z_classLit = createForArray('', '[[Z'), _3Z_classLit = createForArray('', '[Z'), _3Ljava_lang_String_2_classLit = createForArray('[Ljava.lang.', 'String;'), _3Lcom_google_gwt_user_client_ui_Widget_2_classLit = createForArray('[Lcom.google.gwt.user.client.ui.', 'Widget;'), _3Ljava_lang_Object_2_classLit = createForArray('[Ljava.lang.', 'Object;');
