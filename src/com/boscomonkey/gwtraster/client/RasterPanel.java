@@ -130,8 +130,8 @@ public class RasterPanel extends Composite {
     /**
      * @return collection of XyCoord's that are lit
      */
-    public Collection getCoords() {
-        ArrayList lst = new ArrayList();
+    public Collection<XyCoord> getCoords() {
+        ArrayList<XyCoord> lst = new ArrayList<XyCoord>();
         for (int i = 0, n = dotsPanel.getWidgetCount(); i < n; i++) {
             Widget w = dotsPanel.getWidget(i);
             RasterPixel p = (RasterPixel)w;

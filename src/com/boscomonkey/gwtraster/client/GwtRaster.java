@@ -36,10 +36,10 @@ public class GwtRaster implements EntryPoint {
         Button btnCoords = new Button("Coordinates");
         btnCoords.addClickListener(new ClickListener() {
             public void onClick(Widget sender) {
-                Collection coords = rasterPanel.getCoords();
+                Collection<XyCoord> coords = rasterPanel.getCoords();
                 StringBuilder buf = new StringBuilder();
                 boolean firstElt = true;
-                for (Iterator iter = coords.iterator(); iter.hasNext(); /**/) {
+                for (Iterator<XyCoord> iter = coords.iterator(); iter.hasNext(); /**/) {
                     if (firstElt)
                         firstElt = false;
                     else
