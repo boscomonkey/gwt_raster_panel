@@ -1,0 +1,25 @@
+.cbg-RasterPanel {
+	border: 1px solid black;
+    cursor: pointer;
+	position: relative;
+}
+
+.cbg-RasterPanel-panel {
+	position: absolute;
+	top: 0px;
+	right: 0px;
+	bottom: 0px;
+	left: 0px;
+}
+
+.cbg-RasterPixel {
+	position: absolute;
+
+	background-color: wheat;
+	border-right: 1px solid #ccc;
+	border-bottom: 1px solid #ccc;
+}
+
+.cbg-RasterPixel-engaged {
+	background-color: red;
+}
