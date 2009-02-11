@@ -25,8 +25,8 @@ class RasterPixel extends Composite {
         initWidget(dot);
         dot.addStyleName("cbg-RasterPixel");
 
-        String pixelX = String.valueOf(coord.getX() * width) + "px";
-        String pixelY = String.valueOf(coord.getY() * height) + "px";
+        String pixelX = String.valueOf(coord.x() * width) + "px";
+        String pixelY = String.valueOf(coord.y() * height) + "px";
         DOM.setStyleAttribute(getElement(), "left", pixelX);
         DOM.setStyleAttribute(getElement(), "top", pixelY);
 
@@ -39,7 +39,7 @@ class RasterPixel extends Composite {
     }
 
     public String toString() {
-        return "(" + coord.getX() + ", " + coord.getY() + ")";
+        return "(" + coord.x() + ", " + coord.y() + ")";
     }
 
 }

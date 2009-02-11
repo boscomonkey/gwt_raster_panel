@@ -12,11 +12,14 @@
 
       <!-- Other module inherits                                      -->
 
+      <!-- Exporter                                                   -->
+      <inherits name="org.timepedia.exporter.Exporter" />
+      <set-property name="export" value="yes" />
 
       <!-- Specify the app entry point class.                         -->
       <entry-point class='com.boscomonkey.gwtraster.client.RasterPanelLib'/>
     
       <!-- Specify the application specific style sheet.              -->
-      <stylesheet src='RasterPanelLib.css' />
+      <stylesheet src='GwtRaster.css' />
 	
 </module>

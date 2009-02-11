@@ -1,7 +1,6 @@
 package com.boscomonkey.gwtraster.client;
 
-import java.util.ArrayList;
-import java.util.Collection;
+import org.timepedia.exporter.client.Exportable;
 
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.ui.Composite;
@@ -17,7 +16,7 @@ import com.google.gwt.user.client.ui.Widget;
  * 
  * @author boscoso
  */
-public class RasterPanel extends Composite {
+public class RasterPanel extends Composite implements Exportable {
     private int nPixelsX;
     private int nPixelsY;
     private int pixWidth;
@@ -60,6 +59,14 @@ public class RasterPanel extends Composite {
             }
         }
     };
+
+    /**
+     * Creates a RasterPanel of 150x30 dots (each of which is 4x4 screen pixels
+     * in size) with each dot having a border.
+     */
+    public RasterPanel() {
+        this(150, 30, 4, true);
+    }
 
     /**
      * Creates a RasterPanel of "numX" by "numY" dots where each dot is
@@ -121,22 +128,25 @@ public class RasterPanel extends Composite {
             RasterPixel pix = (RasterPixel)dotsPanel.getWidget(i);
             pix.removeStyleName(RasterPixel.CSS_ENGAGED);
 
-            XyCoord xy = pix.getCoord();
-            xyFlags[xy.getX()][xy.getY()] = false;
+            XyCoord coord = pix.getCoord();
+            xyFlags[coord.x()][coord.y()] = false;
         }
         dotsPanel.clear();
     }
 
     /**
-     * @return collection of XyCoord's that are lit
+     * @return array of XyCoord's for dots that are lit
      */
-    public Collection<XyCoord> getCoords() {
-        ArrayList<XyCoord> lst = new ArrayList<XyCoord>();
-        for (int i = 0, n = dotsPanel.getWidgetCount(); i < n; i++) {
+    public XyCoord[] getCoords() {
+        final int n = dotsPanel.getWidgetCount();
+        XyCoord[] coords = new XyCoord[n];
+
+        for (int i = 0; i < n; i++) {
             Widget w = dotsPanel.getWidget(i);
             RasterPixel p = (RasterPixel)w;
-            lst.add(p.getCoord());
+            coords[i] = p.getCoord();
         }
-        return lst;
+
+        return coords;
     }
 }

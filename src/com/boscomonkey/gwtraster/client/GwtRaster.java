@@ -1,8 +1,5 @@
 package com.boscomonkey.gwtraster.client;
 
-import java.util.Collection;
-import java.util.Iterator;
-
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.Window;
@@ -36,17 +33,16 @@ public class GwtRaster implements EntryPoint {
         Button btnCoords = new Button("Coordinates");
         btnCoords.addClickListener(new ClickListener() {
             public void onClick(Widget sender) {
-                Collection<XyCoord> coords = rasterPanel.getCoords();
+                XyCoord[] coords = rasterPanel.getCoords();
                 StringBuilder buf = new StringBuilder();
                 boolean firstElt = true;
-                for (Iterator<XyCoord> iter = coords.iterator(); iter.hasNext(); /**/) {
+                for (int i = 0, n = coords.length; i < n; i++) {
                     if (firstElt)
                         firstElt = false;
                     else
                         buf.append(", ");
 
-                    XyCoord coord = (XyCoord) iter.next();
-                    buf.append(coord.toString());
+                    buf.append(coords[i].toString());
                 }
 
                 if (GWT.isScript()) {

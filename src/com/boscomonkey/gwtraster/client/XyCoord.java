@@ -1,5 +1,9 @@
 package com.boscomonkey.gwtraster.client;
 
+import org.timepedia.exporter.client.Export;
+import org.timepedia.exporter.client.ExportPackage;
+import org.timepedia.exporter.client.Exportable;
+
 import com.google.gwt.user.client.rpc.IsSerializable;
 
 /**
@@ -9,7 +13,9 @@ import com.google.gwt.user.client.rpc.IsSerializable;
  * @author bosco
  * 
  */
-public class XyCoord implements IsSerializable {
+@Export
+@ExportPackage("gwtraster")
+public class XyCoord implements Exportable, IsSerializable {
 
     private int x;
 
@@ -26,7 +32,7 @@ public class XyCoord implements IsSerializable {
         this.y = y;
     }
 
-    public int getX() {
+    public int x() {
         return x;
     }
 
@@ -34,7 +40,7 @@ public class XyCoord implements IsSerializable {
         this.x = x;
     }
 
-    public int getY() {
+    public int y() {
         return y;
     }
 
