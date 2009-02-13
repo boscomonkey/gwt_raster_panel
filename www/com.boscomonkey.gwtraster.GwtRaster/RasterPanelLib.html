@@ -35,7 +35,16 @@
 
 	    function createWidgetIn(id) {
 	        widget = new gwtraster.PanelWidget();
-	        widget.appendAsChild(id);
+	        widget.addTo(id);
+	    }
+	    
+	    function showDots() {
+	       var dots = widget.getDots();
+	       var strings = [];
+	       for (var i = 0; i < dots.length; i++) {
+	           strings.push("(" + dots[i].x + ", " + dots[i].y + ")");
+	       }
+	       alert(strings.join(", "));
 	    }
 
 	    window.onload = function() {
@@ -46,7 +55,8 @@
     <h1>GWT Raster Panel</h1>
     <p>Created via JavaScript instead of GWT.</p>
     <div id="slot1"></div>
-    <div id="btnClear"><input type="button" value="Clear!" onclick="widget.clear()" /></div>
+    <div id="btnClear"><input type="button" value="Clear" onclick="widget.clear()" /></div>
+	<div id="btnGet"><input type="button" value="Get Dots" onclick="showDots()" /></div>
 
-  </body>
+</body>
 </html>
