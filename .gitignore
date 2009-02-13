@@ -1,3 +1,4 @@
 .gwt-cache
 bin
 tomcat
+www/.gwt-tmp
